@@ -1,0 +1,15 @@
+name: Garage CI
+
+env:
+  GARAGE_GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  COMMIT_RANGE: origin/${{ github.base_ref }}...origin/${{ github.head_ref }}
+  DOCKER_TAG: garage-ci-189158592
+  OWNER: "rlworkgroup"
+  DOCKER_CACHE_REPO: "garage-ci"
+  MJKEY_PATH: ${HOME}/.mujoco/mjkey.txt
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:

@@ -13,27 +13,27 @@ on:
     branches: [ master ]
 
 jobs:
-#  build_docker_container:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - uses: actions/checkout@v2
-#      with:
-#        fetch-depth: 0
-#    - name: Login to GitHub Package Registry
-#      run: echo ${{ secrets.CI_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u gitanshu --password-stdin
-#    - name: Build Docker container
-#      run: |
-#        docker build . \
-#          -f docker/Dockerfile \
-#          --target garage-dev-18.04 \
-#          -t "${DOCKER_TAG}" \
-#          --build-arg GARAGE_GH_TOKEN \
-#          --cache-from="docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
-#    - name: Push to cache (GitHub Package Registry)
-#      run: |
-#        docker tag "${DOCKER_TAG}" "docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
-#        docker push "docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
+  build_docker_container:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Login to GitHub Package Registry
+      run: echo ${{ secrets.CI_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u gitanshu --password-stdin
+    - name: Build Docker container
+      run: |
+        docker build . \
+          -f docker/Dockerfile \
+          --target garage-dev-18.04 \
+          -t "${DOCKER_TAG}" \
+          --build-arg GARAGE_GH_TOKEN \
+          --cache-from="docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
+    - name: Push to cache (GitHub Package Registry)
+      run: |
+        docker tag "${DOCKER_TAG}" "docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
+        docker push "docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
 
 
   check_pre_commit:
@@ -48,10 +48,10 @@ jobs:
       run: echo ${{ secrets.CI_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u gitanshu --password-stdin
     - name: Pull from cache (GitHub Package Registry)
       run: docker pull "docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
-    - name: Rename docker image
+    - name: Tag docker image
       run: docker tag docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG} ${DOCKER_TAG}
     - name: Check pre-commit
-#      if: github.event_name == 'pull_request'
+      if: github.event_name == 'pull_request'
       run: |
         docker run \
           -e COMMIT_RANGE \
