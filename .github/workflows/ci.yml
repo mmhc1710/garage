@@ -3,7 +3,7 @@ name: Garage CI
 env:
   GARAGE_GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   COMMIT_RANGE: origin/${{ github.base_ref }}...origin/${{ github.head_ref }}
-  DOCKER_TAG: garage-ci-189158592
+  DOCKER_TAG: garage-ci-${{ github.run_id }}
   OWNER: "rlworkgroup"
   DOCKER_CACHE_REPO: "garage-ci"
   MJKEY_PATH: ${HOME}/.mujoco/mjkey.txt
@@ -58,7 +58,23 @@ jobs:
           --memory 7500m \
           --memory-swap 7500m \
           "${DOCKER_TAG}" scripts/travisci/check_precommit.sh
-    - name: Run normal tests
+
+
+  normal_test:
+    runs-on: ubuntu-latest
+    needs: check_pre_commit
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Login to GitHub Package Registry
+      run: echo ${{ secrets.CI_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u gitanshu --password-stdin
+    - name: Pull from cache (GitHub Package Registry)
+      run: docker pull "docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
+    - name: Tag docker image
+      run: docker tag docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG} ${DOCKER_TAG}
+    - name: Normal tests
       run: |
         ci_env="$(bash <(curl -s https://codecov.io/env))" &&
         docker run \
@@ -75,7 +91,23 @@ jobs:
           		|| echo 'Retrying...' && sleep 30 && continue; \
           	exit 1; \
           done"
-    - name: Run large tests
+
+
+  large_test:
+    runs-on: ubuntu-latest
+    needs: check_pre_commit
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Login to GitHub Package Registry
+      run: echo ${{ secrets.CI_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u gitanshu --password-stdin
+    - name: Pull from cache (GitHub Package Registry)
+      run: docker pull "docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
+    - name: Tag docker image
+      run: docker tag docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG} ${DOCKER_TAG}
+    - name: Large tests
       run: |
         ci_env="$(bash <(curl -s https://codecov.io/env))" &&
         docker run \
@@ -91,7 +123,23 @@ jobs:
         || echo 'Retrying...' && sleep 30 && continue; \
         exit 1; \
         done
-    - name: Run mujoco tests
+
+
+  mujoco_test:
+    runs-on: ubuntu-latest
+    needs: check_pre_commit
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Login to GitHub Package Registry
+      run: echo ${{ secrets.CI_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u gitanshu --password-stdin
+    - name: Pull from cache (GitHub Package Registry)
+      run: docker pull "docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
+    - name: Tag docker image
+      run: docker tag docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG} ${DOCKER_TAG}
+    - name: MuJoCo tests
       run: |
         ci_env="$(bash <(curl -s https://codecov.io/env))" &&
         docker run \
@@ -106,7 +154,23 @@ jobs:
         || echo 'Retrying...' && sleep 30 && continue; \
         exit 1; \
         done
-    - name: Run mujoco long tests
+
+
+  mujoco_test_long:
+    runs-on: ubuntu-latest
+    needs: check_pre_commit
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Login to GitHub Package Registry
+      run: echo ${{ secrets.CI_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u gitanshu --password-stdin
+    - name: Pull from cache (GitHub Package Registry)
+      run: docker pull "docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG}"
+    - name: Tag docker image
+      run: docker tag docker.pkg.github.com/${OWNER}/${DOCKER_CACHE_REPO}/${DOCKER_TAG} ${DOCKER_TAG}
+    - name: Large MuJoCo tests
       run: |
         ci_env="$(bash <(curl -s https://codecov.io/env))" &&
         docker run \
@@ -124,14 +188,15 @@ jobs:
 
 
 
-#  delete_docker_container:
-#    runs-on: ubuntu-latest
-#    needs: build_docker_container
-#
-#    steps:
-#    - uses: actions/delete-package-versions@v1
-#      with:
-#        owner: ${{ env.OWNER }}
-#        repo: ${{ env.DOCKER_CACHE_REPO }}
-#        package-name: ${{ env.DOCKER_TAG }}
-#        token: ${{ secrets.CI_REGISTRY_TOKEN }}
+  delete_docker_container:
+    runs-on: ubuntu-latest
+    needs: [normal_test, long_test, mujoco_test, mujoco_test_long]
+    if: always()
+
+    steps:
+    - uses: actions/delete-package-versions@v1
+      with:
+        owner: ${{ env.OWNER }}
+        repo: ${{ env.DOCKER_CACHE_REPO }}
+        package-name: ${{ env.DOCKER_TAG }}
+        token: ${{ secrets.CI_REGISTRY_TOKEN }}

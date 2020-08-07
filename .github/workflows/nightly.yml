@@ -13,3 +13,5 @@ on:
     - cron: "0 0 * * *"
 
 jobs:
+  run_nightly_tests:
+    runs-on: ubuntu-latest
