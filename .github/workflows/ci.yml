@@ -55,6 +55,7 @@ jobs:
       run: |
         docker run \
           -e COMMIT_RANGE \
+          -e MJKEY \
           --memory 7500m \
           --memory-swap 7500m \
           "${DOCKER_TAG}" scripts/travisci/check_precommit.sh
@@ -79,6 +80,7 @@ jobs:
         ci_env="$(bash <(curl -s https://codecov.io/env))" &&
         docker run \
           -e COMMIT_RANGE \
+          -e MJKEY \
           --memory 7500m \
           --memory-swap 7500m \
           "${DOCKER_TAG}" \
@@ -112,6 +114,7 @@ jobs:
         ci_env="$(bash <(curl -s https://codecov.io/env))" &&
         docker run \
         -e COMMIT_RANGE \
+        -e MJKEY \
         --memory 7500m \
         --memory-swap 7500m \
         "${DOCKER_TAG}" \
@@ -144,6 +147,7 @@ jobs:
         ci_env="$(bash <(curl -s https://codecov.io/env))" &&
         docker run \
         -e COMMIT_RANGE \
+        -e MJKEY \
         --memory 7500m \
         --memory-swap 7500m \
         "${DOCKER_TAG}" \
@@ -175,6 +179,7 @@ jobs:
         ci_env="$(bash <(curl -s https://codecov.io/env))" &&
         docker run \
         -e COMMIT_RANGE \
+        -e MJKEY \
         --memory 7500m \
         --memory-swap 7500m \
         "${DOCKER_TAG}" \
