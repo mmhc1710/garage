@@ -190,7 +190,7 @@ jobs:
 
   delete_docker_container:
     runs-on: ubuntu-latest
-    needs: [normal_test, long_test, mujoco_test, mujoco_test_long]
+    needs: [normal_test, large_test, mujoco_test, mujoco_test_long]
     if: always()
 
     steps:
