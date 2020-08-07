@@ -116,13 +116,13 @@ jobs:
         --memory-swap 7500m \
         "${DOCKER_TAG}" \
         /bin/bash -c \
-        [ ! -f ${MJKEY_PATH} ] || mv ${MJKEY_PATH} ${MJKEY_PATH}.bak &&
+        "[ ! -f ${MJKEY_PATH} ] || mv ${MJKEY_PATH} ${MJKEY_PATH}.bak
         pytest --cov=garage --cov-report=xml -m 'large and not flaky' --durations=20 &&
         for i in {1..5}; do \
         bash <(curl -s https://codecov.io/bash --retry 5) -Z && break \
         || echo 'Retrying...' && sleep 30 && continue; \
         exit 1; \
-        done
+        done"
 
 
   mujoco_test:
@@ -148,12 +148,12 @@ jobs:
         --memory-swap 7500m \
         "${DOCKER_TAG}" \
         /bin/bash -c \
-        pytest --cov=garage --cov-report=xml -m 'mujoco and not flaky' --durations=20 &&
+        "pytest --cov=garage --cov-report=xml -m 'mujoco and not flaky' --durations=20 &&
         for i in {1..5}; do \
         bash <(curl -s https://codecov.io/bash --retry 5) -Z && break \
         || echo 'Retrying...' && sleep 30 && continue; \
         exit 1; \
-        done
+        done"
 
 
   mujoco_test_long:
@@ -179,12 +179,12 @@ jobs:
         --memory-swap 7500m \
         "${DOCKER_TAG}" \
         /bin/bash -c \
-        pytest --cov=garage --cov-report=xml -m 'mujoco_long and not flaky' --durations=20 &&
+        "pytest --cov=garage --cov-report=xml -m 'mujoco_long and not flaky' --durations=20 &&
         for i in {1..5}; do \
             bash <(curl -s https://codecov.io/bash --retry 5) -Z && break \
                 || echo 'Retrying...' && sleep 30 && continue; \
             exit 1; \
-        done
+        done"
 
 
 
