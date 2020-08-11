@@ -60,6 +60,8 @@ jobs:
           --memory 7500m \
           --memory-swap 7500m \
           "${DOCKER_TAG}" scripts/travisci/check_precommit.sh
+    - name: Docker info
+      run: docker version
 
 
   normal_test:
