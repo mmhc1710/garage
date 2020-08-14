@@ -1,4 +1,4 @@
-name: Garage CI Nightly
+name: Garage CI Nightly Test
 
 env:
   GARAGE_GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -10,7 +10,7 @@ env:
 
 on:
   schedule:
-    - cron: '51 22 * * *'
+    - cron: '* * * * *'
 #  push:
 #    branches: [ master ]
 #  pull_request:
