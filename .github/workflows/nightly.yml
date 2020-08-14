@@ -11,10 +11,10 @@ env:
 on:
   schedule:
     - cron: '34 22 * * *'
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+#  push:
+#    branches: [ master ]
+#  pull_request:
+#    branches: [ master ]
 
 
 jobs:
