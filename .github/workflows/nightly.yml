@@ -10,7 +10,7 @@ env:
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '32 22 * * *'
   push:
     branches: [ master ]
   pull_request:
