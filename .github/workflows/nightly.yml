@@ -7,10 +7,13 @@ env:
   OWNER: "rlworkgroup"
   DOCKER_CACHE_REPO: "garage-ci"
   MJKEY_PATH: ${HOME}/.mujoco/mjkey.txt
+  MJKEY: ${{ secrets.MJKEY }}
 
 on:
   schedule:
     - cron: '* * * * *'
+  push:
+    branches: [master]
   pull_request:
     branches: [ master ]
 
