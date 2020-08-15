@@ -299,19 +299,13 @@ jobs:
           bash miniconda.sh -b -p $(CONDA_ROOT) &&
           hash -r &&
           $(CONDA) config --set always_yes yes --set changeps1 no &&
-          # Related issue: https://github.com/conda/conda/issues/9105 &&
-          # Fix in conda: https://github.com/conda/conda/pull/9014 &&
-          # https://repo.continuum.io/miniconda/ doesn't have the script for 4.7.12 yet, &&
-          # so CI fetches 4.7.10 and runs into the above issue when trying to update conda &&
           $(CONDA) install -c anaconda setuptools &&
           $(CONDA) update -q conda &&
           $(CONDA) init &&
-          # Useful for debugging any issues with conda &&
           $(CONDA) info -a &&
           $(CONDA) create -n garage-ci python=3.6 pip -y &&
           $(GARAGE_BIN)/pip install --upgrade pip setuptools &&
           $(GARAGE_BIN)/pip install dist/garage.tar.gz[all,dev] &&
-          # pylint will verify all imports work &&
           $(GARAGE_BIN)/pylint --disable=all --enable=import-error garage"
 
 
