@@ -231,7 +231,7 @@ jobs:
   nightly_test:
     runs-on: ubuntu-latest
     needs: check_pre_commit
-    if: github.event_name == 'schedule'
+#    if: github.event_name == 'schedule'
 
     steps:
       - uses: actions/checkout@v2
@@ -263,7 +263,7 @@ jobs:
   verify_envs_conda:
     runs-on: ubuntu-latest
     needs: check_pre_commit
-    if: github.event_name == 'schedule'
+#    if: github.event_name == 'schedule'
 
     steps:
       - uses: actions/checkout@v2
@@ -318,7 +318,7 @@ jobs:
   verify_envs_pipenv:
     runs-on: ubuntu-latest
     needs: check_pre_commit
-    if: github.event_name == 'schedule'
+#    if: github.event_name == 'schedule'
 
     steps:
       - uses: actions/checkout@v2
