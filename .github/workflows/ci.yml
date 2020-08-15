@@ -257,7 +257,7 @@ jobs:
             -e GITHUB_RUN_ID \
             --memory 7500m \
             --memory-swap 7500m \
-            "${DOCKER_TAG}" pytest -m nightly
+            "${DOCKER_TAG}" pytest -v -m nightly
 
 
   verify_envs_conda:
@@ -291,10 +291,10 @@ jobs:
           --memory-swap 7500m \
           "${DOCKER_TAG}" \
           /bin/bash -c \
-          "CONDA_ROOT := $$HOME/miniconda &&
-          CONDA := $(CONDA_ROOT)/bin/conda &&
-          GARAGE_BIN = $(CONDA_ROOT)/envs/garage-ci/bin &&
-          touch $(MJKEY_PATH) &&
+          "CONDA_ROOT:=$$HOME/miniconda &&
+          CONDA:=$(CONDA_ROOT)/bin/conda &&
+          GARAGE_BIN=$(CONDA_ROOT)/envs/garage-ci/bin &&
+          touch ${MJKEY_PATH} &&
           wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh &&
           bash miniconda.sh -b -p $(CONDA_ROOT) &&
           hash -r &&
@@ -349,7 +349,7 @@ jobs:
           "export PATH=$(shell echo $$PATH_NO_VENV) &&
           export VIRTUAL_ENV= &&
           export PIPENV_MAX_RETRIES=2 &&
-          touch $(MJKEY_PATH) &&
+          touch ${MJKEY_PATH} &&
           pip3 install --upgrade pip setuptools &&
           pip3 install pipenv &&
           pipenv --python=3.6 &&
