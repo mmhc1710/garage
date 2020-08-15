@@ -291,9 +291,9 @@ jobs:
           --memory-swap 7500m \
           "${DOCKER_TAG}" \
           /bin/bash -c \
-          "CONDA_ROOT:=$$HOME/miniconda &&
-          CONDA:=$(CONDA_ROOT)/bin/conda &&
-          GARAGE_BIN=$(CONDA_ROOT)/envs/garage-ci/bin &&
+          "CONDA_ROOT=$HOME/miniconda \
+          CONDA=$(CONDA_ROOT)/bin/conda \
+          GARAGE_BIN=$(CONDA_ROOT)/envs/garage-ci/bin \
           touch ${MJKEY_PATH} &&
           wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh &&
           bash miniconda.sh -b -p $(CONDA_ROOT) &&
@@ -346,7 +346,7 @@ jobs:
           --memory-swap 7500m \
           "${DOCKER_TAG}" \
           /bin/bash -c \
-          "export PATH=$(shell echo $$PATH_NO_VENV) &&
+          "export PATH=$PATH_NO_VENV &&
           export VIRTUAL_ENV= &&
           export PIPENV_MAX_RETRIES=2 &&
           touch ${MJKEY_PATH} &&
